@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import { Toaster } from "@/components/ui/sonner";
+import Head from "next/head";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,7 +18,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <main className={`font-sans ${inter.variable}`}>
+      <Head>
+        <title>Meaty</title>
+        <meta name="description" content="Meaty" />
+        <meta name="keywords" content="Meaty" />
+        <meta name="author" content="Meaty" />
+        <link rel="icon" href="/favicon_io/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico" />
+      </Head>
+
+      <main className={`font-sans ${inter.variable} min-w-[920px]`}>
         <Component {...pageProps} />
         <Toaster />
       </main>

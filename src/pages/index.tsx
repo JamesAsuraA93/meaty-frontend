@@ -1,13 +1,12 @@
-import Head from "next/head";
+import Navbar from "@/components/common/Navbar";
+import Provider from "@/components/layout/Provider";
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Meaty</title>
-        <meta name="description" content="Meaty description" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Provider>
+        <Navbar />
+      </Provider>
     </>
   );
 }

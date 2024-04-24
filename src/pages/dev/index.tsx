@@ -5,7 +5,9 @@ import ProductCard from "@/components/common/ProductCard";
 export default function DevHome() {
   return (
     <div>
-      <ProductCard/>
+      <ProductCard />
+
+      <Typography typoType="h1">eieieiie</Typography>
     </div>
   );
 }

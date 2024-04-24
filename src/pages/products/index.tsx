@@ -1,22 +1,22 @@
-import React from "react";
+import Navbar from "@/components/common/Navbar";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../../components/ui/carousel"
+} from "../../components/ui/carousel";
 
 export default function Products() {
-  return <>
+  return (
+    <>
+      <Navbar />
 
-<Carousel>
-  <CarouselContent>
-    <CarouselItem className="basis-1/3">...</CarouselItem>
-    <CarouselItem className="basis-1/3">...</CarouselItem>
-    <CarouselItem className="basis-1/3">...</CarouselItem>
-  </CarouselContent>
-</Carousel>
-
-</>;
+      <Carousel>
+        <CarouselContent>
+          <CarouselItem className="basis-1/3">...</CarouselItem>
+          <CarouselItem className="basis-1/3">...</CarouselItem>
+          <CarouselItem className="basis-1/3">...</CarouselItem>
+        </CarouselContent>
+      </Carousel>
+    </>
+  );
 }

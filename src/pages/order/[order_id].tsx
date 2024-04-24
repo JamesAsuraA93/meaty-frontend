@@ -1,13 +1,14 @@
 import Navbar from "@/components/common/Navbar";
-import { Typography } from "@/components/typography";
-import React from "react";
+import { useRouter } from "next/router";
 
-export default function Order() {
+export default function OrderDetail() {
+  const router = useRouter();
+  const { order_id } = router.query;
   return (
     <>
       <Navbar />
       <div className="flex h-full w-full items-center justify-center">
-        <Typography typoType="h1">Order Page</Typography>
+        Order : {order_id}
       </div>
     </>
   );
