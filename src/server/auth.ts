@@ -6,7 +6,7 @@ import {
 } from "next-auth";
 
 import { env } from "@/env";
-import MormapProvider from "./authProvider";
+import MeatyProvider from "./authProvider";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
   secret: env.NEXTAUTH_SECRET,
   debug: true,
   providers: [
-    MormapProvider,
+    MeatyProvider,
     /**
      * ...add more providers here.
      *

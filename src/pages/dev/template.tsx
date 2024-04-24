@@ -179,7 +179,6 @@ export default function Template() {
             <Heading1>Meaty</Heading1>
             <Paragraph className="text-center">
               Welcome to the Meaty! This template is designed to help you get
-              started with your Mormap project.
               <br /> ทดสอบการใช้งาน Component ต่างๆ ที่มีใน Meaty
             </Paragraph>
           </div>

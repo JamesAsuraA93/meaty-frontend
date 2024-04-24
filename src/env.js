@@ -14,19 +14,7 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    // NEXTAUTH_URL: z.preprocess(
-    //   // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-    //   // Since NextAuth.js automatically uses the VERCEL_URL if present.
-    //   (str) => process.env.VERCEL_URL ?? str,
-    //   // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    //   process.env.VERCEL ? z.string() : z.string().url(),
-    // ),
-    // MORMAP_ACCESS_TOKEN_URL: z.string(),
-    // MORMAP_REQUEST_TOKEN_URL: z.string(),
-    // MORMAP_AUTHORIZATION_URL: z.string(),
-    // MORMAP_PROFILE_URL: z.string(),
-    // MORMAP_MMGATWAY_APIKEY: z.string(),
-    // MORMAP_ISSUER: z.string(),
+
   },
 
   /**
@@ -35,8 +23,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_API_URL: z.string(),
-    // NEXT_PUBLIC_MORMAP_CLIENT_ID: z.string(),
+    
   },
 
   /**
@@ -46,15 +33,6 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    // NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    // MORMAP_ACCESS_TOKEN_URL: process.env.MORMAP_ACCESS_TOKEN_URL,
-    // MORMAP_REQUEST_TOKEN_URL: process.env.MORMAP_REQUEST_TOKEN_URL,
-    // MORMAP_AUTHORIZATION_URL: process.env.MORMAP_AUTHORIZATION_URL,
-    // MORMAP_PROFILE_URL: process.env.MORMAP_PROFILE_URL,
-    // MORMAP_MMGATWAY_APIKEY: process.env.MORMAP_MMGATWAY_APIKEY,
-    // NEXT_PUBLIC_MORMAP_CLIENT_ID: process.env.NEXT_PUBLIC_MORMAP_CLIENT_ID,
-    // MORMAP_ISSUER: process.env.MORMAP_ISSUER,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

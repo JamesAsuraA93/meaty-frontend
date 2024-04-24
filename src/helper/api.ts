@@ -27,7 +27,7 @@ export const call = async <T>({
   >
 > => {
   try {
-    const basicAuth = env.MORMAP_MMGATWAY_APIKEY;
+    const basicAuth = env.GATWAY_APIKEY;
 
     const response = await axios<{
       data: T;

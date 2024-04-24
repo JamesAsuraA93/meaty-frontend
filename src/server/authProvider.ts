@@ -1,15 +1,14 @@
-import { env } from "@/env";
 import type { OAuthConfig } from "next-auth/providers/index";
 
-const MormapProvider: OAuthConfig<{
+const MeatyProvider: OAuthConfig<{
   id: string;
   name: string;
   email: string;
   role: string;
   avatar: string;
 }> = {
-  id: "mormap",
-  name: "Mormap",
+  id: "meaty",
+  name: "Meaty",
   type: "oauth",
   version: "2.0",
   profile: async (profile, _tokens) => {
@@ -21,13 +20,13 @@ const MormapProvider: OAuthConfig<{
       role: profile.role,
     };
   },
-  requestTokenUrl: env.MORMAP_REQUEST_TOKEN_URL,
-  authorization: env.MORMAP_AUTHORIZATION_URL,
-  userinfo: env.MORMAP_PROFILE_URL,
-  clientId: env.NEXT_PUBLIC_MORMAP_CLIENT_ID,
-  clientSecret: env.NEXTAUTH_SECRET,
-  issuer: env.MORMAP_ISSUER,
-  token: env.MORMAP_ACCESS_TOKEN_URL,
+  // requestTokenUrl: env.MEATY_REQUEST_TOKEN_URL,
+  // authorization: env.MEATY_AUTHORIZATION_URL,
+  // userinfo: env.MEATY_PROFILE_URL,
+  // clientId: env.NEXT_PUBLIC_MEATY_CLIENT_ID,
+  // clientSecret: env.NEXTAUTH_SECRET,
+  // issuer: env.MEATY_ISSUER,
+  // token: env.MEATY_ACCESS_TOKEN_URL,
 };
 
-export default MormapProvider;
+export default MeatyProvider;
