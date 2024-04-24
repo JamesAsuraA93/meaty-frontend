@@ -12,9 +12,7 @@ type ErrorCode = 'INTERNAL_SERVICE_ERROR' | 'INPUT_VALIDATION_ERROR' | 'NOT_FOUN
 
 export type ServiceErrorCode = {
   name: string;
-  issues: {
-    [key: string]: string | string[];
-  } | null;
+  issues: Record<string, string | string[]> | null;
   message: string;
   code: ErrorCode;
 };
