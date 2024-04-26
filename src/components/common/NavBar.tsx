@@ -23,7 +23,7 @@ export default function Navbar() {
   const router = useRouter();
   return (
     <>
-      <nav className="flex flex-row items-center justify-between px-10 py-2">
+      <nav className="flex flex-row items-center justify-between px-10 py-2 bg-[#F7F5F3]">
         <div className="flex flex-row items-center justify-center gap-4">
           <Link href={PATH_WEBSITE.HOME}>
             <Image src="/graphic/logo.png" alt="logo" width={80} height={80} />
