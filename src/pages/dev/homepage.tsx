@@ -1,16 +1,8 @@
-import React from 'react'
 import Navbar from '@/components/common/NavBar'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-  } from "../../components/ui/carousel"
-import ProductCard from "@/components/common/ProductCard";
-import CarouselCard from '@/components/common/CarouselCard';
+import CarouselCard from "@/components/common/CarouselCard";
+import { Flame , ChevronRight } from 'lucide-react';
 
 export default function homepage() {
   return (
@@ -29,17 +21,18 @@ export default function homepage() {
         </div>
         
     </div>
-    <Carousel>
-        <CarouselContent>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-            <CarouselItem className="basis-1/3"><ProductCard /></CarouselItem>
-        </CarouselContent>
-    </Carousel>
-    
+    <div className='flex justify-between pt-10 items-center text-center'>
+            <div className='flex items-center justify-center pl-40'>
+                <Flame />
+                <h1 className='text-3xl text-center pl-1'>Feature goods</h1>
+            </div>
+            <div className='flex pr-40'>
+                <p className=''>View all</p>
+                <ChevronRight />
+            </div>
+        </div>
+        
+    <CarouselCard />
 
     </>
   )

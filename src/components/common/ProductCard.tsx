@@ -7,8 +7,7 @@ import { Badge } from "../ui/badge"
 export default function ProductCard() {
   return (
     <>
-    <div className='h-20'></div>
-    <div className="box-content ] w-[250px] p-1 border rounded-[20px] overflow-visible hover:border-green-500">
+    <div className="w-[250px] p-1 border rounded-[20px] overflow-visible  hover:border-green-500">
        <div className="flex relative">
             <Image alt='Product' src={"/file 2.png"} width={150} height={150} className='absolute -top-14' />
             <div className='pt-5'>
@@ -16,7 +15,7 @@ export default function ProductCard() {
                     <StarIcon className="text-green-900 fill-green-900" width={20} height={20}/>
                     <p className='text-sm pl-1'>5/5</p>
                 </div>
-            <Badge variant={"red"} className='text-white mt-2 ml-40'>ON SALE</Badge>
+            <Badge variant={"red"} className='text-white mt-2 ml-40 '>ON SALE</Badge>
             </div>
 
         </div>
