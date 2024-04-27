@@ -17,12 +17,12 @@ export default function CarouselSize() {
         opts={{
           align: "start",
         }}
-        className="max-w-[97%]"
+        className="max-w-[80%]"
       >
         <CarouselContent>
           {Array.from({ length: 12 }).map((_, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className="p-10">
+              <div>
                 <Card>
                   <CardContent className="flex aspect-square items-center justify-center p-6">
                     <ProductCard/>
