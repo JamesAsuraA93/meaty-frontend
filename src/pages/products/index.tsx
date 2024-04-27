@@ -1,22 +1,17 @@
-import Navbar from "@/components/common/Navbar";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "../../components/ui/carousel";
+import Navbar from "@/components/common/NavBar";
+import Filter from "@/components/common/Filter";
+import Product from "@/components/common/product";
 
 export default function Products() {
   return (
     <>
+      
       <Navbar />
-
-      <Carousel>
-        <CarouselContent>
-          <CarouselItem className="basis-1/3">...</CarouselItem>
-          <CarouselItem className="basis-1/3">...</CarouselItem>
-          <CarouselItem className="basis-1/3">...</CarouselItem>
-        </CarouselContent>
-      </Carousel>
+      <div className="flex">
+        <Filter />
+        <Product />
+      </div>
+    
     </>
   );
 }

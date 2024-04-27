@@ -1,20 +1,17 @@
-import { Typography } from "@/components/typography";
 import React from "react";
-import ProductCard from "@/components/common/ProductCard";
-import CarouselCard from "@/components/common/CarouselCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+import Navbar from "@/components/common/NavBar";
+import Product from "@/components/common/product";
+import Filter from "@/components/common/Filter";
 
 
 export default function DevHome() {
   return (
-    <div className="pl-5">
-      <CarouselCard />
-    </div>
+    <>
+      <Navbar />
+      <div className="flex">
+        <Filter />
+        <Product />
+      </div>
+    </>
   );
 }

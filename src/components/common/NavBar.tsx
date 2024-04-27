@@ -1,23 +1,13 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import {
-  ChevronDownIcon,
-  CircleDollarSignIcon,
-  CircleUserRoundIcon,
-  LayoutGridIcon,
-  ShoppingCartIcon,
-} from "lucide-react";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { PATH_WEBSITE } from "@/config/pathWebsites";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { ChevronDownIcon, CircleDollarSignIcon, CircleUserRoundIcon, LayoutGridIcon, ShoppingCartIcon } from 'lucide-react';
+import Image from 'next/image';
+import { Button } from '../ui/button';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { PATH_WEBSITE } from '@/config/pathWebsites';
 
 export default function Navbar() {
   const router = useRouter();
@@ -28,7 +18,10 @@ export default function Navbar() {
           <Link href={PATH_WEBSITE.HOME}>
             <Image src="/graphic/logo.png" alt="logo" width={80} height={80} />
           </Link>
-
+          <div className="flex items-center relative">
+            <Input className='mt-5 p-2 max-w-[90%] rounded-md text-sm' type="name" placeholder="Search" />
+            <Search className="absolute right-8 top-10 transform -translate-y-1/2" size={20}/>
+          </div>
           <div>
             <Button
               onClick={() => {

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export default function AllProduct() {
+export default function Filter() {
   return (
     <>
-      <div className='max-w-[20%]'>
+      <div className='max-w-[25%] pl-10 mt-10'>
         <div className='border-b border-gray-500 '>
             <h1 className='text-3xl text-[#383634]'>Filter</h1>
             <p className='pt-5'>Price</p>
