@@ -28,7 +28,7 @@ export default function ProductDetail() {
           <ChevronLeft />
           <p>Back</p>
         </div>
-        <Image className="pl-20" src="/file 2.png" alt="meat" width={400} height={400} />
+        <Image className="m-auto " src="/file 2.png" alt="meat" width={400} height={400} />
         <div className='pl-20 pb-10 '>
           <h1 className='pb-5 text-3xl'>Feedback</h1>
           <div className='flex '>
@@ -73,20 +73,21 @@ export default function ProductDetail() {
           <p className='text-[#858585]'>CBD:</p>
           <p className='pl-20'>0-20 mg/g</p>
         </div>
-    <div className='flex justify-between items-center bg-white  max-w-[90%] p-5 rounded-[20px]'>
-        <div>
+        <div className='flex justify-between items-center bg-white max-w-[90%] p-5 rounded-[20px] gap-3'>
+        <div >
             <h1 className='text-3xl'>Total: ${(1.50 * quantity).toFixed(2)}</h1>
             <p className='text-red-500'>$ 1.50 / 1g</p>
-        </div>
-        <div className='flex'>
-             <Button onClick={decrementQuantity} id="decrement" className='text-blue-600 bg-white px-4 py-2 rounded-l-md'>-</Button>
-            <Input type="number" min="1" max="100"  value={quantity} readOnly className='text-center bg-white w-16' />
+          </div>
+          <div className='flex absolute ml-52'>
+              <Button onClick={decrementQuantity} id="decrement" className='text-blue-600 bg-white px-4 py-2 rounded-l-md re'>-</Button>
+            <Input type="number" min="1" max="100" value={quantity} readOnly className='text-center bg-white w-16' />
             <Button onClick={incrementQuantity} id="increment" className='text-blue-600 bg-white px-4 py-2 rounded-r-md'>+</Button>
         </div>
         <div>
-            <Button>Add to cart <Plus /></Button>
+            <Button className='mr-0'>Add to cart <Plus /></Button>
         </div>
     </div>
+
     <div>
         <h1 className='pt-5 text-3xl'>Description:</h1>
         <p className='pt-5 text-[#858585]'>Blueberry Seagal whole flower is an indica-dominant strain with strong THC
