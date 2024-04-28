@@ -1,35 +1,37 @@
 import Navbar from '@/components/common/NavBar'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
-import CarouselCard from "@/components/common/CarouselCard";
+import CarouselCard from '@/components/common/CarouselCard';
 import { Flame , ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 
-export default function homepage() {
+export default function Homepage() {
   return (
     <>
-    <Navbar />
-    <div className="flex flex-row pt-10 justify-center">
-        <div className='bg-[#EDEAE7] rounded-lg  ml-5 hover:cursor-pointer'>
-             <Image alt='shop' src={"/Shop now Banner (clickable).png"} width={500} height={800}/>
-        </div>
-        <div className='pl-5 hover:cursor-pointer'>
-            <Image alt='promotion' src={"/Rectangle 4.png"} width={375} height={575}/>
-        </div>
-        
-    </div>
-    <div className='flex justify-between pt-10 items-center text-center'>
-            <div className='flex items-center justify-center pl-40'>
-                <Flame />
-                <h1 className='text-3xl text-center pl-1 pb-3'>Feature goods</h1>
-            </div>
-            <div className='flex pr-40'>
-                <p className=''>View all</p>
-                <ChevronRight />
-            </div>
-        </div>
-        
-    <CarouselCard />
-
+      <Navbar />
+      <div className="flex flex-row pt-10 justify-center">
+          <Link href="/destination-path">
+            <a className='bg-[#EDEAE7] rounded-lg ml-5 hover:cursor-pointer'>
+              <Image alt='shop' src={"/Shop now Banner (clickable).png"} width={500} height={800}/>
+            </a>
+          </Link>
+          <div className='pl-5 hover:cursor-pointer'>
+              <Image alt='promotion' src={"/Rectangle 4.png"} width={375} height={575}/>
+          </div>
+          
+      </div>
+      <div className='flex justify-between pt-10 items-center text-center'>
+          <div className='flex items-center justify-center pl-40'>
+              <Flame />
+              <h1 className='text-3xl text-center pl-1 pb-3'>Feature goods</h1>
+          </div>
+          <div className='flex pr-40'>
+              <p className=''>View all</p>
+              <ChevronRight />
+          </div>
+      </div>
+      
+      <CarouselCard />
     </>
   )
 }
