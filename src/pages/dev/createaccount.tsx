@@ -1,44 +1,53 @@
-import React from 'react';
-import Navbar from '@/components/common/NavBar';
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+// import Navbar from "@/components/common/NavBar";
+import Navbar from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from '@/components/ui/DatePicker';
-import Link from 'next/link'; 
+import { DatePicker } from "@/components/ui/DatePicker";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function createaccount() {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center items-center h-screen bg-[#F7F5F3]">
+      <div className="flex h-screen items-center justify-center bg-[#F7F5F3]">
         <div>
-          <h1 className="text-center text-[#383634] text-3xl">Meaty</h1>
+          <h1 className="text-center text-3xl text-[#383634]">Meaty</h1>
           <div className="flex gap-2.5 pt-10 text-[#858585]">
-            <div className="w-full mb-5">
+            <div className="mb-5 w-full">
               <Label htmlFor="email">Username</Label>
               <Input type="email" id="username" />
             </div>
-            <div className="w-full mb-5">
+            <div className="mb-5 w-full">
               <Label htmlFor="date">Birth date</Label>
-              <DatePicker callback={function (date: Date): void {
-                throw new Error('Function not implemented.');
-              }} />
+              <DatePicker
+                callback={function (date: Date): void {
+                  throw new Error(
+                    `"Function not implemented. ${date.toISOString()}"`,
+                  );
+                }}
+              />
             </div>
           </div>
           <div className="flex gap-2.5 pt-10 text-[#858585]">
-            <div className="w-full mb-5">
+            <div className="mb-5 w-full">
               <Label htmlFor="password">Password</Label>
               <Input type="password" id="password" />
             </div>
-            <div className="w-full mb-5">
+            <div className="mb-5 w-full">
               <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input type="password" id="confirm-password"  />
+              <Input type="password" id="confirm-password" />
             </div>
           </div>
-        <div className="flex justify-center items-center flex-col">
-            <Button className="justify-center mt-5 w-60 h-10 text-white bg-[#5A934C]">Login</Button>
-            <p className="text-xs pt-2">
-              Have an account yet? <Link href="/dev/login" className="underline">Sign up</Link>
+          <div className="flex flex-col items-center justify-center">
+            <Button className="mt-5 h-10 w-60 justify-center bg-[#5A934C] text-white">
+              Login
+            </Button>
+            <p className="pt-2 text-xs">
+              Have an account yet?{" "}
+              <Link href="/dev/login" className="underline">
+                Sign up
+              </Link>
             </p>
           </div>
         </div>

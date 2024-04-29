@@ -1,15 +1,6 @@
-import React, { useEffect, useState } from "react";
 import SidebarAdmin from "@/components/common/SideBarAdmin";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import Modal from "@/components/layout/Modal";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -19,7 +10,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from "next/router";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useEffect, useState } from "react";
 
 interface Product {
   id: string;
@@ -108,7 +107,7 @@ const initialOrders = [
         quantity: 2,
         subtotal: 100.0,
         product: { id: "005", name: "Product E", price: 50.0 },
-      }
+      },
     ],
   },
   {
@@ -127,7 +126,7 @@ const initialOrders = [
         quantity: 3,
         subtotal: 300.0,
         product: { id: "006", name: "Product F", price: 100.0 },
-      }
+      },
     ],
   },
   {
@@ -146,7 +145,7 @@ const initialOrders = [
         quantity: 4,
         subtotal: 400.0,
         product: { id: "007", name: "Product G", price: 100.0 },
-      }
+      },
     ],
   },
   {
@@ -165,7 +164,7 @@ const initialOrders = [
         quantity: 5,
         subtotal: 500.0,
         product: { id: "008", name: "Product H", price: 100.0 },
-      }
+      },
     ],
   },
   {
@@ -184,9 +183,9 @@ const initialOrders = [
         quantity: 6,
         subtotal: 600.0,
         product: { id: "009", name: "Product I", price: 100.0 },
-      }
+      },
     ],
-  }
+  },
 ];
 
 function StatusSelect({
@@ -223,7 +222,7 @@ function StatusSelect({
 }
 
 export default function AdminOrders() {
-  const router = useRouter();
+  // const router = useRouter();
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [newStatus, setNewStatus] = useState<string>("");
@@ -231,10 +230,10 @@ export default function AdminOrders() {
 
   const orderSummary = orders.reduce(
     (acc, order) => {
-      acc[order.status] = (acc[order.status] || 0) + 1;
+      acc[order.status] = (acc[order.status] ?? 0) + 1;
       return acc;
     },
-    {} as { [key: string]: number },
+    {} as Record<string, number>,
   );
 
   useEffect(() => {
@@ -280,25 +279,29 @@ export default function AdminOrders() {
         <div className="mb-4 grid grid-cols-4 gap-4">
           <div className="rounded bg-blue-100 p-4 text-center shadow">
             <div className="text-lg font-bold">
-              {orderSummary["PENDING"] || 0}
+              {/* {orderSummary["PENDING"] || 0} */}
+              {orderSummary.PENDING}
             </div>
             <div>Pending Orders</div>
           </div>
           <div className="rounded bg-green-100 p-4 text-center shadow">
             <div className="text-lg font-bold">
-              {orderSummary["SHIPPING"] || 0}
+              {/* {orderSummary.SHIPPING"] || 0} */}
+              {orderSummary.SHIPPING}
             </div>
             <div>Shipping Orders</div>
           </div>
           <div className="rounded bg-yellow-100 p-4 text-center shadow">
             <div className="text-lg font-bold">
-              {orderSummary["DELIVERED"] || 0}
+              {/* {orderSummary.DELIVERED"] || 0} */}
+              {orderSummary.DELIVERED}
             </div>
             <div>Delivered Orders</div>
           </div>
           <div className="rounded bg-red-100 p-4 text-center shadow">
             <div className="text-lg font-bold">
-              {orderSummary["CANCELED"] || 0}
+              {/* {orderSummary.CANCELED"] || 0} */}
+              {orderSummary.CANCELED}
             </div>
             <div>Canceled Orders</div>
           </div>

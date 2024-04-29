@@ -1,12 +1,7 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import Navbar from "@/components/common/NavBar";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import ProductCard from "@/components/common/ProductCard";
+import Navbar from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +20,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import ProductCard from "@/components/common/ProductCard";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 interface Product {
   id: number;
@@ -119,7 +115,7 @@ export default function Products() {
 
   const handleBrandChange = (
     brand: string,
-    event: React.ChangeEvent<HTMLInputElement> | any,
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const isChecked = event.target.checked;
     setSelectedBrands((prev) => {

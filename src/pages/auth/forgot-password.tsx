@@ -1,4 +1,5 @@
-import Navbar from "@/components/common/Navbar";
+// import Navbar from "@/components/common/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import Provider from "@/components/layout/Provider";
 import { Typography } from "@/components/typography";
 import React from "react";

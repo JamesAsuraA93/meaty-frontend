@@ -1,4 +1,5 @@
-import Navbar from "@/components/common/Navbar";
+// import Navbar from "@/components/common/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import { useRouter } from "next/router";
 
 export default function OrderDetail() {

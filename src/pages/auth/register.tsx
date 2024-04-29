@@ -1,4 +1,4 @@
-import Navbar from "@/components/common/NavBar";
+// import Navbar from "@/components/common/NavBar";
 import Provider from "@/components/layout/Provider";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 // import { format } from "path";
+import Navbar from "@/components/layout/Navbar";
 import { format } from "date-fns";
 import React from "react";
 import { useForm } from "react-hook-form";

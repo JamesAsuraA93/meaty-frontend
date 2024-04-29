@@ -1,6 +1,6 @@
-import Navbar from "@/components/common/Navbar";
+// import Navbar from "@/components/common/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import { Typography } from "@/components/typography";
-import React from "react";
 
 export default function Order() {
   return (

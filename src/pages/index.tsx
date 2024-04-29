@@ -1,7 +1,8 @@
-import Navbar from "@/components/common/NavBar";
-import Image from "next/image";
 import CarouselCard from "@/components/common/CarouselCard";
-import { Flame, ChevronRight } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+// import Navbar from "@/components/common/NavBar";
+import { ChevronRight, Flame } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Homepage() {
