@@ -1,5 +1,9 @@
-import React, { ChangeEvent, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
+import axios from 'axios';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -16,7 +20,7 @@ import {
 
 interface User {
   id: string;
-  birthdate: string;
+  birthdate?: string;
   username: string;
   password: string;
   role: string;
@@ -26,9 +30,10 @@ interface User {
 interface InputWithLabelProps {
   id: string;
   label: string;
-  value: string;
+  value?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  disabled?: boolean;
 }
 
 function InputWithLabel({
@@ -37,6 +42,7 @@ function InputWithLabel({
   value,
   onChange,
   type = "text",
+  disabled = false,
 }: InputWithLabelProps) {
   return (
     <div className="space-y-4">
@@ -49,62 +55,59 @@ function InputWithLabel({
         value={value}
         onChange={onChange}
         className="w-full"
+        disabled={disabled}
       />
     </div>
-  );
-}
-
-function RoleSelect({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const handleSelect = (role: string) => {
-    onChange(role);
-  };
-
-  return (
-    <Select>
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={value || "Select role"} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Roles</SelectLabel>
-          <SelectItem value="USER" onSelect={() => handleSelect("USER")}>
-            User
-          </SelectItem>
-          <SelectItem value="ADMIN" onSelect={() => handleSelect("ADMIN")}>
-            Admin
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
   );
 }
 
 export default function EditUser() {
   const router = useRouter();
   const { id } = router.query;
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [user, setUser] = useState<User>({
-    id: id as string,
-    birthdate: "",
-    username: "",
-    password: "",
-    role: "USER",
-    credit: 0,
-  });
+  useEffect(() => {
+    if (id) {
+      axios.get(`http://localhost:8001/getUser/${id}`)
+        .then(response => {
+          setUser({
+            id: response.data.id.toString(),
+            birthdate: new Date(response.data.birthdate).toISOString().split('T')[0],
+            username: response.data.email,
+            password: response.data.password,
+            role: response.data.role,
+            credit: response.data.credit,
+          });
+          setLoading(false);
+        })
+        .catch(error => {
+          setError('Failed to fetch user data');
+          setLoading(false);
+        });
+    }
+  }, [id]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  const handleCreditChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const credit = parseFloat(e.target.value);
+    setUser(prev => prev ? { ...prev, credit } : null);
   };
 
-  const handleRoleChange = (role: string) => {
-    setUser((prev) => ({ ...prev, role }));
+  const updateCredit = () => {
+    if (user) {
+      axios.put(`http://localhost:8001/updateUserCredit/${user.id}`, { credit: user.credit })
+        .then(() => {
+          alert("Credit updated successfully!");
+          void router.push("/admin/users")
+        })
+        .catch(() => {
+          alert("Failed to update credit.");
+        });
+    }
   };
 
   return (
@@ -112,45 +115,45 @@ export default function EditUser() {
       <SidebarAdmin />
       <div className="flex flex-1 flex-col p-4">
         <h1 className="mb-8">Edit User</h1>
-        <div className="space-y-4">
-          <InputWithLabel
-            id="username"
-            label="Username"
-            value={user.username}
-            onChange={handleInputChange}
-          />
-          <InputWithLabel
-            id="password"
-            label="Password"
-            type="password"
-            value={user.password}
-            onChange={handleInputChange}
-          />
-          <InputWithLabel
-            id="birthdate"
-            label="Birthdate"
-            type="date"
-            value={user.birthdate}
-            onChange={handleInputChange}
-          />
+        {user && (
           <div className="space-y-4">
-            <Label htmlFor="role">Role</Label>
-            <RoleSelect value={user.role} onChange={handleRoleChange} />
+            <InputWithLabel
+              id="username"
+              label="Username"
+              value={user.username}
+              disabled={true} onChange={function (e: React.ChangeEvent<HTMLInputElement>): void {
+                throw new Error("Function not implemented.");
+              } }            />
+            <InputWithLabel
+              id="birthdate"
+              label="Birthdate"
+              type="date"
+              value={user.birthdate}
+              disabled={true} onChange={function (e: React.ChangeEvent<HTMLInputElement>): void {
+                throw new Error("Function not implemented.");
+              } }            />
+            <InputWithLabel
+              id="role"
+              label="Role"
+              value={user.role}
+              disabled={true} onChange={function (e: React.ChangeEvent<HTMLInputElement>): void {
+                throw new Error("Function not implemented.");
+              } }            />
+            <InputWithLabel
+              id="credit"
+              label="Credit"
+              type="number"
+              value={user.credit.toString()}
+              onChange={handleCreditChange}
+            />
           </div>
-          <InputWithLabel
-            id="credit"
-            label="Credit"
-            type="number"
-            value={user.credit.toString()}
-            onChange={handleInputChange}
-          />
-        </div>
+        )}
         <Button
-          onClick={() => alert("User updated!")}
+          onClick={updateCredit}
           variant="default"
           className="mt-4"
         >
-          Update User
+          Update Credit
         </Button>
       </div>
     </div>

@@ -1,18 +1,46 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import React, { useEffect, useState } from "react";
 import SidebarAdmin from "@/components/common/SideBarAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
-const users = [
-  { id: "1", birthdate: "1990-01-01", username: "blueberry42", role: "USER", credit: 150.50},
-  { id: "2", birthdate: "1985-05-15", username: "banner_bruce", role: "ADMIN", credit: 220.00},
-  { id: "3", birthdate: "1992-08-09", username: "thai_thunder", role: "USER", credit: 185.75},
-  { id: "4", birthdate: "1989-12-30", username: "weed_noob", role: "USER", credit: 95.00},
-];
+interface User {
+  id: number;
+  birthdate: string;
+  username: string;
+  role: string;
+  credit: number;
+}
 
 export default function AdminUsers() {
   const router = useRouter();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios.get('http://localhost:8001/allUser')
+      .then(response => {
+        setUsers(response.data.map((user: any) => ({
+          id: user.id,
+          username: user.email, // Assuming 'email' is used as 'username'
+          birthdate: new Date(user.birthdate).toLocaleDateString(),
+          role: user.role,
+          credit: user.credit
+        })));
+        setLoading(false);
+      })
+      .catch(error => {
+        setError('Failed to fetch data');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="flex">
@@ -20,9 +48,6 @@ export default function AdminUsers() {
       <div className="flex-1 p-4">
         <div className="flex justify-between items-center mb-4">
           <h1>Users</h1>
-          <Button onClick={() => router.push("/admin/users/edit/0")} variant="default">
-            Add User
-          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -37,7 +62,7 @@ export default function AdminUsers() {
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow key={user.id.toString()}>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.birthdate}</TableCell>
