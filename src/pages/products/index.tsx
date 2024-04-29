@@ -166,10 +166,11 @@ export default function Products() {
             </div>
             {/* Dynamic Brand Filter Section */}
             <div className="border-b border-gray-500 pb-4 pt-5">
-              <h1 className="text-3xl text-[#383634]">Brand</h1>
+              <h1 className="text-3xl text-[#383634] pb-4">Brand</h1>
               {uniqueBrands.map((brand) => (
                 <div key={brand} className="flex items-center space-x-2 pb-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id={`brand-${brand}`}
                     checked={selectedBrands.includes(brand)}
                     onChange={(e) => handleBrandChange(brand, e)}

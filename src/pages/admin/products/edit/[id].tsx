@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,19 +6,29 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SidebarAdmin from "@/components/common/SideBarAdmin";
 import { Upload } from "lucide-react";
+import axios from "axios";
 
 interface Product {
   name: string;
   description: string;
   price: string;
   imageUrl: string;
-  time_delivery: string;
-  produced_in: string;
+  timeDelivery: string;
+  producedIn: string;
   brand: string;
-  thc_min: string;
-  thc_max: string;
-  cbd_min: string;
-  cbd_max: string;
+  thcMin: string;
+  thcMax: string;
+  cbdMin: string;
+  cbdMax: string;
+  productDetail: {
+    timeDelivery: string;
+    producedIn: string;
+    brand: string;
+    thcMin: string;
+    thcMax: string;
+    cbdMin: string;
+    cbdMax: string;
+  };
 }
 
 interface InputWithLabelProps {
@@ -48,19 +58,47 @@ function InputWithLabel({ id, label, value, onChange, type = "text" }: InputWith
 
 export default function EditProduct() {
   const router = useRouter();
+  const { id } = router.query;
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [product, setProduct] = useState<Product>({
     name: "",
     description: "",
     price: "",
-    imageUrl: "https://www.bccannabisstores.com/cdn/shop/files/1062860_1800x1800.jpg?v=1684339496",
-    time_delivery: "",
-    produced_in: "",
+    imageUrl: "",
+    timeDelivery: "",
+    producedIn: "",
     brand: "",
-    thc_min: "",
-    thc_max: "",
-    cbd_min: "",
-    cbd_max: "",
+    thcMin: "",
+    thcMax: "",
+    cbdMin: "",
+    cbdMax: "",
+    productDetail: {
+      timeDelivery: "",
+      producedIn: "",
+      brand: "",
+      thcMin: "",
+      thcMax: "",
+      cbdMin: "",
+      cbdMax: "",
+    },
   });
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true); // Set loading state to true when request is initiated
+      axios.get(`http://localhost:8002/product/${id}`)
+        .then(response => {
+          setProduct(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching product:', error);
+        })
+        .finally(() => {
+          setLoading(false); // Set loading state to false when request is completed (whether successful or not)
+        });
+    }
+  }, [id]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,6 +111,9 @@ export default function EditProduct() {
       setProduct((prev) => ({ ...prev, imageUrl: URL.createObjectURL(file) }));
     }
   };
+
+  const imageUrl = `http://localhost:8006/files/${encodeURIComponent(product.filePath)}`;
+
   return (
     <div className="flex">
       <SidebarAdmin />
@@ -81,7 +122,7 @@ export default function EditProduct() {
           <div className="relative text-center">
             <label htmlFor="upload-image" className="cursor-pointer">
               <img
-                src={product.imageUrl || "/placeholder.png"}
+                src={imageUrl || "/placeholder.png"}
                 alt="Product"
                 className="mb-4 rounded-lg object-cover shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
                 style={{ width: "100%", height: "100%" }}
@@ -99,84 +140,88 @@ export default function EditProduct() {
           </div>
         </div>
         <div className="flex-1">
-          <Tabs defaultValue="info" className="w-full">
-            <TabsList className="grid grid-cols-3 gap-1">
-              <TabsTrigger value="info">General Info</TabsTrigger>
-              <TabsTrigger value="manufacturing">Manufacturing</TabsTrigger>
-              <TabsTrigger value="specifications">Specifications</TabsTrigger>
-            </TabsList>
-            <TabsContent value="info">
-              <InputWithLabel
-                id="name"
-                label="Name"
-                value={product.name}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="description"
-                label="Description"
-                value={product.description}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="price"
-                type="number"
-                label="Price"
-                value={product.price}
-                onChange={handleInputChange}
-              />
-            </TabsContent>
-            <TabsContent value="manufacturing">
-              <InputWithLabel
-                id="time_delivery"
-                label="Time Delivery"
-                value={product.time_delivery}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="produced_in"
-                label="Produced In"
-                value={product.produced_in}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="brand"
-                label="Brand"
-                value={product.brand}
-                onChange={handleInputChange}
-              />
-            </TabsContent>
-            <TabsContent value="specifications">
-              <InputWithLabel
-                id="thc_min"
-                type="number"
-                label="THC Min (%)"
-                value={product.thc_min}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="thc_max"
-                type="number"
-                label="THC Max (%)"
-                value={product.thc_max}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="cbd_min"
-                type="number"
-                label="CBD Min (%)"
-                value={product.cbd_min}
-                onChange={handleInputChange}
-              />
-              <InputWithLabel
-                id="cbd_max"
-                type="number"
-                label="CBD Max (%)"
-                value={product.cbd_max}
-                onChange={handleInputChange}
-              />
-            </TabsContent>
-          </Tabs>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <Tabs defaultValue="info" className="w-full">
+              <TabsList className="grid grid-cols-3 gap-1">
+                <TabsTrigger value="info">General Info</TabsTrigger>
+                <TabsTrigger value="manufacturing">Manufacturing</TabsTrigger>
+                <TabsTrigger value="specifications">Specifications</TabsTrigger>
+              </TabsList>
+              <TabsContent value="info">
+                <InputWithLabel
+                  id="name"
+                  label="Name"
+                  value={product.name}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="description"
+                  label="Description"
+                  value={product.description}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="price"
+                  type="number"
+                  label="Price"
+                  value={product.price}
+                  onChange={handleInputChange}
+                />
+              </TabsContent>
+              <TabsContent value="manufacturing">
+                <InputWithLabel
+                  id="timeDelivery"
+                  label="Time Delivery"
+                  value={product.productDetail.timeDelivery}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="producedIn"
+                  label="Produced In"
+                  value={product.productDetail.producedIn}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="brand"
+                  label="Brand"
+                  value={product.productDetail.brand}
+                  onChange={handleInputChange}
+                />
+              </TabsContent>
+              <TabsContent value="specifications">
+                <InputWithLabel
+                  id="thcMin"
+                  type="number"
+                  label="THC Min (%)"
+                  value={product.productDetail.thcMin}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="thcMax"
+                  type="number"
+                  label="THC Max (%)"
+                  value={product.productDetail.thcMax}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="cbdMin"
+                  type="number"
+                  label="CBD Min (%)"
+                  value={product.productDetail.cbdMin}
+                  onChange={handleInputChange}
+                />
+                <InputWithLabel
+                  id="cbdMax"
+                  type="number"
+                  label="CBD Max (%)"
+                  value={product.productDetail.cbdMax}
+                  onChange={handleInputChange}
+                />
+              </TabsContent>
+            </Tabs>
+          )}
           <Button
             onClick={() => alert("Product updated!")}
             variant="default"

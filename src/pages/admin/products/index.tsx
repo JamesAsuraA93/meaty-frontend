@@ -1,19 +1,23 @@
-/* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import SidebarAdmin from "@/components/common/SideBarAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/router';
 
-const products = [
-  { id: "1", name: "Blue berry muffin", description: "nice weed nice mao", price: 99.99, imageUrl: "https://www.bccannabisstores.com/cdn/shop/files/1062860_1800x1800.jpg?v=1684339496" },
-  { id: "2", name: "Bruce Banner", description: "nice weed nice mao", price: 99.99, imageUrl: "https://www.bccannabisstores.com/cdn/shop/files/1062860_1800x1800.jpg?v=1684339496" },
-  { id: "3", name: "Thai muffin", description: "nice weed nice mao", price: 99.99, imageUrl: "https://www.bccannabisstores.com/cdn/shop/files/1062860_1800x1800.jpg?v=1684339496" },
-  { id: "4", name: "Noob weed", description: "nice weed nice mao", price: 99.99, imageUrl: "https://www.bccannabisstores.com/cdn/shop/files/1062860_1800x1800.jpg?v=1684339496" },
-];
-
 export default function AdminProducts() {
+  const [products, setProducts] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    axios.get('http://localhost:8002/product')
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
 
   return (
     <div className="flex">
@@ -40,12 +44,12 @@ export default function AdminProducts() {
             {products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
-                  <img src={product.imageUrl} alt={product.name} className="rounded-full" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+                  <img src={`http://localhost:8006/files/${encodeURIComponent(product.filePath)}`} alt={product.name} className="rounded-full" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
                 </TableCell>
                 <TableCell>{product.id}</TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
-                <TableCell className="text-right">{product.price} $</TableCell>
+                <TableCell className="text-right">{product.price}$</TableCell>
                 <TableCell>
                   <Button onClick={() => router.push(`/admin/products/edit/${product.id}`)} variant="secondary">
                     Edit
