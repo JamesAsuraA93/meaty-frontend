@@ -1,4 +1,7 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import React, { type ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,32 +12,25 @@ import { Upload } from "lucide-react";
 import axios from "axios";
 
 interface Product {
+  id?: string;
   name: string;
   description: string;
-  price: string;
-  imageUrl: string;
-  timeDelivery: string;
-  producedIn: string;
+  price: number;
+  quantity?: number;
   brand: string;
-  thcMin: string;
-  thcMax: string;
-  cbdMin: string;
-  cbdMax: string;
-  productDetail: {
-    timeDelivery: string;
-    producedIn: string;
-    brand: string;
-    thcMin: string;
-    thcMax: string;
-    cbdMin: string;
-    cbdMax: string;
-  };
+  cbdMax: number;
+  cbdMin: number;
+  producedIn: string;
+  thcMax: number;
+  thcMin: number;
+  timeDelivery: string;
+  filePath: string;
 }
 
 interface InputWithLabelProps {
   id: string;
   label: string;
-  value: string;
+  value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
 }
@@ -64,29 +60,21 @@ export default function EditProduct() {
   const [product, setProduct] = useState<Product>({
     name: "",
     description: "",
-    price: "",
-    imageUrl: "",
-    timeDelivery: "",
-    producedIn: "",
+    price: 0,
+    quantity: 999,
     brand: "",
-    thcMin: "",
-    thcMax: "",
-    cbdMin: "",
-    cbdMax: "",
-    productDetail: {
-      timeDelivery: "",
-      producedIn: "",
-      brand: "",
-      thcMin: "",
-      thcMax: "",
-      cbdMin: "",
-      cbdMax: "",
-    },
+    cbdMax: 0,
+    cbdMin: 0,
+    producedIn: "",
+    thcMax: 0,
+    thcMin: 0,
+    timeDelivery: "",
+    filePath: "",
   });
 
   useEffect(() => {
     if (id) {
-      setLoading(true); // Set loading state to true when request is initiated
+      setLoading(true);
       axios.get(`http://localhost:8002/product/${id}`)
         .then(response => {
           setProduct(response.data);
@@ -95,20 +83,51 @@ export default function EditProduct() {
           console.error('Error fetching product:', error);
         })
         .finally(() => {
-          setLoading(false); // Set loading state to false when request is completed (whether successful or not)
+          setLoading(false);
         });
     }
   }, [id]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({ ...prev, [name]: value }));
+    setProduct((prev) => ({
+      ...prev,
+      [name]: name === 'price' || name === 'cbdMax' || name === 'cbdMin' || name === 'thcMax' || name === 'thcMin' ? parseFloat(value) : value,
+    }));
   };
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setProduct((prev) => ({ ...prev, imageUrl: URL.createObjectURL(file) }));
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await axios.post("http://localhost:8006/files/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        const filePath = response.data.file.path;
+        setProduct((prev) => ({ ...prev, filePath }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
+
+  const addOrUpdateProduct = async () => {
+    try {
+      if (id === "0") {
+        await axios.post("http://localhost:8002/product", product);
+        alert("New product added!");
+        void router.push("/admin/products")
+      } else {
+        await axios.put(`http://localhost:8002/product/${id}`, product);
+        alert("Product updated!");
+        void router.push("/admin/products")
+      }
+    } catch (error) {
+      console.error("Error adding/updating product:", error);
     }
   };
 
@@ -174,19 +193,19 @@ export default function EditProduct() {
                 <InputWithLabel
                   id="timeDelivery"
                   label="Time Delivery"
-                  value={product.productDetail.timeDelivery}
+                  value={product.timeDelivery}
                   onChange={handleInputChange}
                 />
                 <InputWithLabel
                   id="producedIn"
                   label="Produced In"
-                  value={product.productDetail.producedIn}
+                  value={product.producedIn}
                   onChange={handleInputChange}
                 />
                 <InputWithLabel
                   id="brand"
                   label="Brand"
-                  value={product.productDetail.brand}
+                  value={product.brand}
                   onChange={handleInputChange}
                 />
               </TabsContent>
@@ -195,39 +214,39 @@ export default function EditProduct() {
                   id="thcMin"
                   type="number"
                   label="THC Min (%)"
-                  value={product.productDetail.thcMin}
+                  value={product.thcMin}
                   onChange={handleInputChange}
                 />
                 <InputWithLabel
                   id="thcMax"
                   type="number"
                   label="THC Max (%)"
-                  value={product.productDetail.thcMax}
+                  value={product.thcMax}
                   onChange={handleInputChange}
                 />
                 <InputWithLabel
                   id="cbdMin"
                   type="number"
                   label="CBD Min (%)"
-                  value={product.productDetail.cbdMin}
+                  value={product.cbdMin}
                   onChange={handleInputChange}
                 />
                 <InputWithLabel
                   id="cbdMax"
                   type="number"
                   label="CBD Max (%)"
-                  value={product.productDetail.cbdMax}
+                  value={product.cbdMax}
                   onChange={handleInputChange}
                 />
               </TabsContent>
             </Tabs>
           )}
           <Button
-            onClick={() => alert("Product updated!")}
+            onClick={addOrUpdateProduct}
             variant="default"
             className="mt-4"
           >
-            Update Product
+            {id === "0" ? "Add Product" : "Update Product"}
           </Button>
         </div>
       </div>

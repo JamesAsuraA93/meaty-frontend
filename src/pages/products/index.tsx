@@ -68,25 +68,21 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const productsPerPage = 12;
+  const productsPerPage = 6;
 
   useEffect(() => {
     axios
-      .get("http://localhost:8002/product")
+      .get<Product[]>("http://localhost:8002/product")
       .then((response) => {
         setAllProducts(response.data);
         setProducts(response.data);
-        // Extract brands from ProductDetail, handling potential absence of ProductDetail or brand
         const brands = new Set(
-          response.data.flatMap(
-            (product: { ProductDetail: any[] }) =>
-              product.ProductDetail.map(
-                (detail: { brand: any }) => detail.brand,
-              ).filter(Boolean), // Ensure only non-empty, non-null brands
+          response.data.flatMap((product) =>
+            product.ProductDetail.map((detail) => detail.brand).filter(Boolean),
           ),
         );
         setUniqueBrands(Array.from(brands));
-        console.log("Brands fetched:", Array.from(brands)); // Debugging to check what brands are extracted
+        console.log("Brands fetched:", Array.from(brands));
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
@@ -166,7 +162,7 @@ export default function Products() {
             </div>
             {/* Dynamic Brand Filter Section */}
             <div className="border-b border-gray-500 pb-4 pt-5">
-              <h1 className="text-3xl text-[#383634] pb-4">Brand</h1>
+              <h1 className="pb-4 text-3xl text-[#383634]">Brand</h1>
               {uniqueBrands.map((brand) => (
                 <div key={brand} className="flex items-center space-x-2 pb-2">
                   <input

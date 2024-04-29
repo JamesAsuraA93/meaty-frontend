@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SidebarAdmin from "@/components/common/SideBarAdmin";
@@ -5,8 +6,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/router';
 
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  filePath: string;
+}
+
+
 export default function AdminProducts() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const router = useRouter();
 
   useEffect(() => {
