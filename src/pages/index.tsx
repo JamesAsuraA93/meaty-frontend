@@ -1,6 +1,5 @@
 import Navbar from '@/components/common/NavBar'
 import Image from 'next/image'
-import { Button } from "@/components/ui/button";
 import CarouselCard from '@/components/common/CarouselCard';
 import { Flame , ChevronRight } from 'lucide-react';
 import Link from 'next/link';

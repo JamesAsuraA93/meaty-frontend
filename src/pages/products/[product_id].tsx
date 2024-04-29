@@ -10,9 +10,55 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+interface ProductDetail {
+  id: number;
+  productId: number;
+  timeDelivery: string;
+  producedIn: string;
+  brand: string;
+  thcMin: number;
+  thcMax: number;
+  cbdMin: number;
+  cbdMax: number;
+  createdBy: string | null;
+  updatedBy: string | null;
+  deletedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+interface Stock {
+  id: number;
+  productId: number;
+  quantity: number;
+  createdBy: string | null;
+  updatedBy: string | null;
+  deletedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  createdBy: string | null;
+  updatedBy: string | null;
+  deletedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  filePath: string;
+  fileId: string | null;
+  stock: Stock;
+  productDetail: ProductDetail;
+}
 
 export default function ProductDetail() {
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const { product_id } = router.query;
