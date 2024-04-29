@@ -49,9 +49,6 @@ export default function AdminProducts() {
                   <Button onClick={() => router.push(`/admin/products/edit/${product.id}`)} variant="secondary">
                     Edit
                   </Button>
-                  <Button onClick={() => console.log("delete product : ", product.id)} variant="outline">
-                    Delete
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}

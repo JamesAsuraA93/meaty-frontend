@@ -47,9 +47,6 @@ export default function AdminUsers() {
                   <Button onClick={() => router.push(`/admin/users/edit/${user.id}`)} variant="secondary">
                     Edit
                   </Button>
-                  <Button onClick={() => console.log("delete user : ", user.id)} variant="outline">
-                    Delete
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}
