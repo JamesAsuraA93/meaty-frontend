@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { CircleDollarSign, HandCoins } from "lucide-react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -129,9 +130,9 @@ export default function Checkout() {
             },
           },
         );
-        console.log({
-          response,
-        });
+        // console.log({
+        //   response,
+        // });
 
         // console.log(response.data);
 
@@ -155,6 +156,8 @@ export default function Checkout() {
     // }
   }, []);
 
+  const router = useRouter();
+
   const makeOrder = async () => {
     const valueForm = form.getValues();
 
@@ -168,7 +171,7 @@ export default function Checkout() {
       const token = localStorage.getItem("token");
 
       toast.promise(
-        await axios.post(
+        axios.post(
           `http://localhost:8003/checkout/${email}`,
           {
             basketId: valueForm.basketId,
@@ -196,6 +199,7 @@ export default function Checkout() {
             });
             // console.log(res.data)
             // setBasket(res.data as InterfaceBasket[])
+            void router.push("/");
             return "Order successfully";
           },
           error: (err) => {
@@ -220,7 +224,7 @@ export default function Checkout() {
     <>
       <Navbar
         callback={(data) => {
-          console.log(data);
+          // console.log(data);
           setCredit(data.credits);
         }}
       />
