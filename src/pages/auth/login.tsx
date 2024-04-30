@@ -13,14 +13,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PATH_ENDPOINTS } from "@/config/apiEndpoint";
+import { PATH_WEBSITE } from "@/config/pathWebsites";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
-  username: z.string().min(2).max(50),
+  email: z.string().email(),
   password: z.string().min(8).max(50),
 });
 
@@ -33,16 +38,56 @@ export default function LoginAuth() {
     //   password: "",
     // },
     values: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
+  const router = useRouter();
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    try {
+      const response = toast.promise(
+        axios.post(PATH_ENDPOINTS.LOGIN, {
+          email: values.email,
+          password: values.password,
+        }),
+        {
+          loading: "Loading...",
+          success: (res) => {
+            console.log({
+              res,
+            });
+            const token: string = res.data.access_token;
+            localStorage.setItem("token", token);
+            void router.push(PATH_WEBSITE.HOME);
+            return "Login success";
+          },
+          error: (err) => {
+            console.log({
+              err,
+            });
+            return "Login failed";
+          },
+        },
+      );
+      console.log({
+        response,
+      });
+      // await axios.post(PATH_ENDPOINTS.LOGIN, {
+      //   data: values,
+      // });
+      // console.log({
+      //   response,
+      // });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -58,10 +103,10 @@ export default function LoginAuth() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

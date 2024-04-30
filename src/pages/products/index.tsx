@@ -185,7 +185,7 @@ export default function Products() {
             <div className="flex items-center">
               <p className="pr-5">Sort by</p>
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                   <Button className="w-28" variant="outline">
                     Sort
                   </Button>

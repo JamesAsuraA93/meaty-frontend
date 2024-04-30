@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 interface ProductDetail {
   id: number;
   productId: number;
@@ -62,7 +63,7 @@ export default function ProductDetail() {
   const router = useRouter();
   const { product_id } = router.query;
 
-  console.log("id", product_id);
+  // console.log("id", product_id);
 
   useEffect(() => {
     if (product_id) {
@@ -76,6 +77,55 @@ export default function ProductDetail() {
         });
     }
   }, [product_id]);
+
+  // "productId": "string",
+  //   "quantity": 0,
+  //   "price": 0
+  const addToCart = async () => {
+    // console.log({
+    //   product,
+    //   quantity,
+    // });
+    try {
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
+      // send req with email
+      toast.promise(
+        axios.post(
+          "http://localhost:8003/basket",
+          {
+            email: email,
+            productId: product?.id,
+            quantity,
+            price: product?.price,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
+        {
+          loading: "Adding to cart...",
+          success: (res) => {
+            console.log({
+              res,
+            });
+            router.reload();
+            return "Added to cart";
+          },
+          error: (err) => {
+            console.log({
+              err,
+            });
+            return "Failed to add to cart";
+          },
+        },
+      );
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
 
   if (!product) {
     return <div>Loading...</div>;
@@ -198,7 +248,7 @@ export default function ProductDetail() {
               </Button>
             </div>
             <div>
-              <Button className="mr-0">
+              <Button onClick={addToCart} className="mr-0">
                 Add to cart <Plus />
               </Button>
             </div>
