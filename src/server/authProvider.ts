@@ -20,6 +20,7 @@ const MeatyProvider: OAuthConfig<{
       role: profile.role,
     };
   },
+
   // requestTokenUrl: env.MEATY_REQUEST_TOKEN_URL,
   // authorization: env.MEATY_AUTHORIZATION_URL,
   // userinfo: env.MEATY_PROFILE_URL,

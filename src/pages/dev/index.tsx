@@ -1,11 +1,16 @@
-import { Typography } from "@/components/typography";
-import React from "react";
+import Filter from "@/components/common/Filter";
+// import Navbar from "@/components/common/NavBar";
+import Product from "@/components/common/product";
+import Navbar from "@/components/layout/Navbar";
 
 export default function DevHome() {
   return (
-    <div>
-      DevHome
-      <Typography typoType="code">สวัสดี</Typography>
-    </div>
+    <>
+      <Navbar />
+      <div className="flex">
+        <Filter />
+        <Product />
+      </div>
+    </>
   );
 }

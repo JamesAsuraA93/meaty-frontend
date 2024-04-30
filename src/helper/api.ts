@@ -27,7 +27,8 @@ export const call = async <T>({
   >
 > => {
   try {
-    const basicAuth = env.GATWAY_APIKEY;
+    // const basicAuth = env.GATWAY_APIKEY;
+    const basicAuth = "";
 
     const response = await axios<{
       data: T;
