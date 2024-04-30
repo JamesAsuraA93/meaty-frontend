@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+// import { text } from "stream/consumers";
 interface ProductDetail {
   id: number;
   productId: number;
@@ -57,6 +58,61 @@ interface Product {
   productDetail: ProductDetail;
 }
 
+export interface AIInterface {
+  sentiment: Sentiment;
+  preprocess: Preprocess;
+  alert: string[];
+  comparative: string[];
+  associative: Associative[];
+  intention: Intention;
+}
+
+export interface Intention {
+  request: string;
+  sentiment: string;
+  question: string;
+  announcement: string;
+}
+
+export interface Associative {
+  "ent-pos": string[];
+  "polarity-neg": boolean;
+  endIndex: number;
+  "polarity-pos": boolean;
+  beginIndex: number;
+  text: string;
+  "ent-neg": string[];
+  asp: string[];
+}
+
+export interface Preprocess {
+  input: string;
+  neg: string[];
+  pos: string[];
+  segmented: string[];
+  keyword: string[];
+}
+
+export interface Sentiment {
+  score: string;
+  "polarity-neg": boolean;
+  "polarity-pos": boolean;
+  polarity: string;
+}
+
+export interface CommentInterface {
+  id: number;
+  productId: number;
+  comment: string;
+  sentimentScore: number;
+  createdBy?: string;
+  updatedBy?: string;
+  deletedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
 export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -64,6 +120,125 @@ export default function ProductDetail() {
   const { product_id } = router.query;
 
   // console.log("id", product_id);
+
+  const getScore = async ({ text }: { text: string }) => {
+    try {
+      const response = await axios.get(
+        `https://api.aiforthai.in.th/ssense?text=${text}`,
+        {
+          headers: {
+            Apikey: "CF9FCMgzEDgXkpXml0fClhft194FVcY4",
+            Host: "ssense",
+            "User-Agent": "PostmanRuntime/7.11.0",
+            Accept: "*/*",
+            "Cache-Control": "no-cache",
+            "accept-encoding": "gzip, deflate",
+            Connection: "keep-alive",
+            "cache-control": "no-cache",
+          },
+        },
+      );
+
+      const dataPre: AIInterface = response.data;
+
+      console.log("response AI", response);
+      const score = dataPre.sentiment.score;
+      return {
+        score: dataPre.sentiment["polarity-neg"] ? -score : score,
+        text: dataPre.preprocess.input,
+      };
+    } catch (error) {
+      console.error("Error fetching ai for thai:", error);
+      return {
+        score: 0,
+        text: text,
+      };
+    }
+  };
+
+  const doComment = async (text: string) => {
+    //     comment: string;
+    // productId: number;
+    // sentimentScore: number;
+
+    const dataAI = await getScore({ text });
+
+    try {
+      const response = toast.promise(
+        axios.post(`http://localhost:8002/product/comment`, {
+          comment: text,
+          productId: product_id as string,
+          sentimentScore: dataAI.score,
+        }),
+        {
+          loading: "Commenting...",
+          success: (res) => {
+            console.log({
+              res,
+            });
+            return "Commented";
+          },
+          error: (err) => {
+            console.log({
+              err,
+            });
+            return "Failed to comment";
+          },
+        },
+      );
+      console.log("response", response);
+    } catch (error) {
+      // console.error("Error fetching ai for thai:", error);
+      toast.error("Erorr Comment");
+    }
+  };
+
+  const [listComment, setListComment] = useState<CommentInterface[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8002/product/comment/${product_id as string}`)
+      .then((response) => {
+        console.log("response", response);
+        const comemnts: CommentInterface[] = response.data;
+        setListComment(comemnts);
+      })
+      .catch((error) => {
+        console.error("Error fetching comment:", error);
+      });
+
+    // getScore({ text: comment }).then((res) => {
+    //   console.log("res", res);
+    // });
+  }, [product_id]);
+
+  // useEffect(() => {
+
+  //   axios
+  //     .get(
+  //       "https://api.aiforthai.in.th/ssense?text=สาขานี้พนักงานน่ารักให้บริการดี",
+  //       {
+  //         headers: {
+  //           Apikey: "CF9FCMgzEDgXkpXml0fClhft194FVcY4",
+  //           Host: "ssense",
+  //           "User-Agent": "PostmanRuntime/7.11.0",
+  //           Accept: "*/*",
+  //           "Cache-Control": "no-cache",
+  //           "accept-encoding": "gzip, deflate",
+  //           Connection: "keep-alive",
+  //           "cache-control": "no-cache",
+  //         },
+  //       },
+  //     )
+  //     .then((response) => {
+  //       console.log("response", response);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching ai for thai:", error);
+  //     });
+  // }, []);
+
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     if (product_id) {
@@ -167,11 +342,38 @@ export default function ProductDetail() {
               <Input
                 className="max-w-[60%] border-none bg-[#EDEAE7] text-[#858585]"
                 placeholder="Share yours feedback here!"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
               />
-              <Button className="ml-5 max-w-[25%] p-3">Enter feedback</Button>
+              <Button
+                onClick={() => {
+                  void doComment(comment);
+                }}
+                className="ml-5 max-w-[25%] p-3"
+              >
+                Enter <br /> feedback
+              </Button>
             </div>
           </div>
-          <div className="ml-20 max-w-[75%] rounded-[20px] bg-white p-3">
+          {listComment.map((dcomment) => (
+            <div
+              key={dcomment.id}
+              className="ml-20 mt-5 max-w-[75%] rounded-[20px] bg-white p-3"
+            >
+              <div className="flex justify-between">
+                <h1 className="text-[#383634]">Anonymous</h1>
+                {dcomment.sentimentScore > 50 ? (
+                  <h1 className="text-green-500 ">Positive</h1>
+                ) : (
+                  <h1 className="text-red-500">Negative</h1>
+                )}
+              </div>
+              <p>
+                {dcomment.comment} : {dcomment.sentimentScore}
+              </p>
+            </div>
+          ))}
+          {/* <div className="ml-20 max-w-[75%] rounded-[20px] bg-white p-3">
             <div className="flex justify-between">
               <h1 className="text-[#383634]">Anonymous</h1>
               <h1 className="text-green-500 ">Positive</h1>
@@ -184,7 +386,7 @@ export default function ProductDetail() {
               <h1 className="text-red-500">Negative</h1>
             </div>
             <p>It&apos;s was so bad because I feeling dizzy</p>
-          </div>
+          </div> */}
         </div>
         <div>
           <h1 className="mt-5 text-4xl">{product.name}</h1>
