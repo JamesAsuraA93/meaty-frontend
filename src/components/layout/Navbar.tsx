@@ -146,8 +146,8 @@ export default function Navbar(props: Props) {
                     <DropdownMenuItem
                       className="hover:cursor-pointer"
                       onClick={() => {
-                        // void router.push("/order");
-                        void router.push("/checkout");
+                        void router.push("/order");
+                        // void router.push("/checkout");
                       }}
                     >
                       Orders

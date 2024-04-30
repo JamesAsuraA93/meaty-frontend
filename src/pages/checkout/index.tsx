@@ -10,6 +10,7 @@ import axios from "axios";
 import { CircleDollarSign, HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export interface InterfaceBasket {
@@ -101,12 +102,12 @@ export default function Checkout() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  // // 2. Define a submit handler.
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   // Do something with the form values.
+  //   // ✅ This will be type-safe and validated.
+  //   console.log(values);
+  // }
 
   const [basket, setBasket] = useState<InterfaceBasket[]>([]); // สร้าง state สำหรับตะกร้าสินค้า
 
@@ -161,26 +162,55 @@ export default function Checkout() {
       valueForm,
     });
 
-    return;
+    // return;
     try {
       const email = localStorage.getItem("email");
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        `http://localhost:8003/order/${email}`,
+      toast.promise(
+        await axios.post(
+          `http://localhost:8003/checkout/${email}`,
+          {
+            basketId: valueForm.basketId,
+            firstname: valueForm.firstname,
+            lastname: valueForm.lastname,
+            phone: valueForm.phone,
+            emailInfo: valueForm.emailInfo,
+            address: valueForm.address,
+            district: valueForm.district,
+            paymentType: valueForm.paymentType,
+            postalCode: valueForm.postalCode,
+            province: valueForm.province,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
+          loading: "Checkout...",
+          success: (res) => {
+            console.log({
+              res,
+            });
+            // console.log(res.data)
+            // setBasket(res.data as InterfaceBasket[])
+            return "Order successfully";
+          },
+          error: (err) => {
+            console.log(err);
+            return "Order failed";
           },
         },
       );
-      console.log({
-        response,
-      });
+      // console.log({
+      //   response,
+      // });
 
       // console.log(response.data);
 
-      setBasket(response.data as InterfaceBasket[]);
+      // setBasket(response.data as InterfaceBasket[]);
     } catch (error) {
       console.error(error);
     }
