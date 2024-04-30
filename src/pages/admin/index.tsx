@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import SidebarAdmin from "@/components/common/SideBarAdmin";
 import Modal from "@/components/layout/Modal";
 import { Button } from "@/components/ui/button";
@@ -98,33 +101,51 @@ export default function AdminOrders() {
   );
 
   useEffect(() => {
-    axios.get('http://localhost:8003/orders')
-      .then(response => {
-        const fetchedOrders = response.data.map((order: { id: { toString: () => any; }; items: any[]; status: any; }) => ({
-          id: order.id.toString(),
-          user_id: order.items[0]?.order?.user?.email || 'Unknown', 
-          total_price_amount: order.items.reduce((acc: number, item: { quantity: number; product: { price: number; }; }) => acc + item.quantity * item.product.price, 0),
-          discount: 0,
-          delivery_fee: 0,
-          status: order.status,
-          created_at: new Date().toISOString(), 
-          items: order.items.map((item: { product: { name: any; price: number; filePath: any; }; quantity: number; }) => ({
-            id: `${order.id}-${item.product.name}`,
-            order_id: order.id.toString(),
-            product_id: 'Unknown',
-            quantity: item.quantity,
-            subtotal: item.quantity * item.product.price,
-            product: {
-              id: 'Unknown',
-              name: item.product.name,
-              price: item.product.price,
-              filePath: item.product.filePath
-            }
-          }))
-        }));
+    axios
+      .get("http://localhost:8003/orders")
+      .then((response) => {
+        const fetchedOrders = response.data.map(
+          (order: {
+            id: { toString: () => any };
+            items: any[];
+            status: any;
+          }) => ({
+            id: order.id.toString(),
+            user_id: order.items[0]?.order?.user?.email || "Unknown",
+            total_price_amount: order.items.reduce(
+              (
+                acc: number,
+                item: { quantity: number; product: { price: number } },
+              ) => acc + item.quantity * item.product.price,
+              0,
+            ),
+            discount: 0,
+            delivery_fee: 0,
+            status: order.status,
+            created_at: new Date().toISOString(),
+            items: order.items.map(
+              (item: {
+                product: { name: string; price: number; filePath: string };
+                quantity: number;
+              }) => ({
+                id: `${order.id}-${item.product.name}`,
+                order_id: order.id.toString(),
+                product_id: "Unknown",
+                quantity: item.quantity,
+                subtotal: item.quantity * item.product.price,
+                product: {
+                  id: "Unknown",
+                  name: item.product.name,
+                  price: item.product.price,
+                  filePath: item.product.filePath,
+                },
+              }),
+            ),
+          }),
+        );
         setOrders(fetchedOrders);
       })
-      .catch(error => console.error('Failed to fetch orders:', error));
+      .catch((error) => console.error("Failed to fetch orders:", error));
   }, []);
 
   const openModal = (order: Order) => {
@@ -144,16 +165,21 @@ export default function AdminOrders() {
   const saveStatusChange = () => {
     if (selectedOrder) {
       const url = `http://localhost:8003/orders/${selectedOrder.id}/status`;
-      axios.put(url, { status: newStatus })
+      axios
+        .put(url, { status: newStatus })
         .then(() => {
           setOrders((orders) =>
             orders.map((order) =>
-              order.id === selectedOrder.id ? { ...order, status: newStatus } : order,
+              order.id === selectedOrder.id
+                ? { ...order, status: newStatus }
+                : order,
             ),
           );
           closeModal();
         })
-        .catch(error => console.error('Failed to update order status:', error));
+        .catch((error) =>
+          console.error("Failed to update order status:", error),
+        );
     }
   };
 
@@ -245,7 +271,11 @@ export default function AdminOrders() {
               </div>
               <div>
                 <label>Status: </label>
-                <select value={newStatus} onChange={handleStatusChange} className="border rounded p-2">
+                <select
+                  value={newStatus}
+                  onChange={handleStatusChange}
+                  className="rounded border p-2"
+                >
                   <option value="PENDING">Pending</option>
                   <option value="SHIPPING">Shipping</option>
                   <option value="DELIVERED">Delivered</option>
