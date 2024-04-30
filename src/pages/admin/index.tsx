@@ -194,13 +194,12 @@ export default function AdminOrders() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
+              <TableHead>Order ID</TableHead>
               <TableHead>User ID</TableHead>
               <TableHead>Total Price</TableHead>
               <TableHead>Discount</TableHead>
               <TableHead>Delivery Fee</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Created At</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -213,7 +212,6 @@ export default function AdminOrders() {
                 <TableCell>${order.discount.toFixed(2)}</TableCell>
                 <TableCell>${order.delivery_fee.toFixed(2)}</TableCell>
                 <TableCell>{order.status}</TableCell>
-                <TableCell>{order.formattedDate}</TableCell>
                 <TableCell>
                   <Button onClick={() => openModal(order)}>View</Button>
                 </TableCell>
