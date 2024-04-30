@@ -2,9 +2,11 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "src/components/ui/button";
 import Navbar from "@/components/layout/Navbar";
+import { useRouter } from "next/router";
 // import Navbar from "@/components/common/NavBar";
 
 export default function CheckoutComplete() {
+  const router = useRouter();
   return (
     <>
       <Navbar />
@@ -18,7 +20,10 @@ export default function CheckoutComplete() {
             Your order is being processed and will be shipped in 3-4 business
             days.
           </p>
-          <Button className="mt-5 h-10 w-60 border border-[#383634] bg-[#F7F5F3] text-[#383634] hover:border-[#5A934C] hover:bg-[#5A934C] hover:text-white">
+          <Button
+            onClick={() => router.push("/")}
+            className="mt-5 h-10 w-60 border border-[#383634] bg-[#F7F5F3] text-[#383634] hover:border-[#5A934C] hover:bg-[#5A934C] hover:text-white"
+          >
             Back to home
           </Button>
         </div>

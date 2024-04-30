@@ -33,14 +33,14 @@ export default function LoginAuth() {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   username: "",
-    //   password: "",
-    // },
-    values: {
+    defaultValues: {
       email: "",
       password: "",
     },
+    // values: {
+    //   email: "",
+    //   password: "",
+    // },
   });
 
   const router = useRouter();

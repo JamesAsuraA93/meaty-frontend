@@ -1,6 +1,19 @@
-import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { PATH_WEBSITE } from "@/config/pathWebsites";
+import axios from "axios";
+import {
+  ChevronDownIcon,
+  CircleDollarSignIcon,
+  CircleUserRoundIcon,
+  LayoutGridIcon,
+  Search,
+  ShoppingCartIcon,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,19 +22,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  ChevronDownIcon,
-  CircleDollarSignIcon,
-  CircleUserRoundIcon,
-  LayoutGridIcon,
-  ShoppingCartIcon,
-} from "lucide-react";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { PATH_WEBSITE } from "@/config/pathWebsites";
-import axios from "axios";
 
 export type Self = {
   email: string;
@@ -119,17 +119,19 @@ export default function Navbar(props: Props) {
         </div>
 
         <div className="flex items-center justify-center gap-6">
-          <div className="inline-flex items-center justify-center gap-1">
-            <CircleDollarSignIcon className="h-4 w-4" />
-            Credits : {data?.credits} $
-          </div>
+          {data && (
+            <div className="inline-flex items-center justify-center gap-1">
+              <CircleDollarSignIcon className="h-4 w-4" />
+              Credits : {data?.credits} $
+            </div>
+          )}
           {isLogin ? (
             <>
               <div>
                 <DropdownMenu>
                   <DropdownMenuTrigger className="inline-flex items-center gap-2">
                     <CircleUserRoundIcon className="h-5 w-5" />
-                    James
+                    {data?.email.split("@")[0]}
                     <ChevronDownIcon className="h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -138,36 +140,11 @@ export default function Navbar(props: Props) {
                     <DropdownMenuItem
                       className="hover:cursor-pointer"
                       onClick={() => {
-                        void router.push("/profile");
-                      }}
-                    >
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:cursor-pointer"
-                      onClick={() => {
-                        void router.push("/order");
-                        // void router.push("/checkout");
-                      }}
-                    >
-                      Orders
-                    </DropdownMenuItem>
-                    {/* <DropdownMenuItem
-                      className="hover:cursor-pointer"
-                      onClick={() => {
-                        // void router.push("/cart");
-                        void router.push("/checkout");
-                      }}
-                    >
-                      Cart
-                    </DropdownMenuItem> */}
-
-                    <DropdownMenuItem
-                      className="hover:cursor-pointer"
-                      onClick={() => {
                         // void router.push("/cart");
                         localStorage.removeItem("token");
+                        localStorage.removeItem("email");
                         setIsLogin(false);
+                        setData(null);
                         void router.push(PATH_WEBSITE.HOME);
                       }}
                     >

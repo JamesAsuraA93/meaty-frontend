@@ -74,18 +74,6 @@ const formSchema = z.object({
 });
 
 export default function Checkout() {
-  // const [quantity, setQuantity] = useState(1); // สร้าง state สำหรับจำนวนสินค้าและฟังก์ชันเพิ่มค่า
-
-  // const incrementQuantity = () => {
-  //   setQuantity((prevQuantity) => prevQuantity + 1);
-  // };
-
-  // const decrementQuantity = () => {
-  //   if (quantity > 1) {
-  //     setQuantity((prevQuantity) => prevQuantity - 1);
-  //   }
-  // };
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -97,7 +85,7 @@ export default function Checkout() {
       emailInfo: "",
       address: "",
       district: "",
-      paymentType: PaymentType.CASH,
+      paymentType: PaymentType.CREDIT,
       postalCode: "",
       province: "",
     },
@@ -130,11 +118,6 @@ export default function Checkout() {
             },
           },
         );
-        // console.log({
-        //   response,
-        // });
-
-        // console.log(response.data);
 
         setBasket(response.data as InterfaceBasket[]);
         const basketId: string[] = response.data.map(
@@ -150,10 +133,6 @@ export default function Checkout() {
       }
     };
     void getBasket();
-
-    // if (basketData) {
-    //   setBasket(JSON.parse(basketData));
-    // }
   }, []);
 
   const router = useRouter();
@@ -161,11 +140,23 @@ export default function Checkout() {
   const makeOrder = async () => {
     const valueForm = form.getValues();
 
-    console.log({
-      valueForm,
-    });
+    // console.log({
+    //   valueForm,
+    // });
 
-    // return;
+    const sumTotal = basket.reduce(
+      (acc, item) => acc + item.product.price * item.quantity,
+      0,
+    );
+
+    if (
+      sumTotal + 15 > credit &&
+      valueForm.paymentType === PaymentType.CREDIT
+    ) {
+      toast.error("Not enough credit");
+      return;
+    }
+
     try {
       const email = localStorage.getItem("email");
       const token = localStorage.getItem("token");
@@ -197,9 +188,7 @@ export default function Checkout() {
             console.log({
               res,
             });
-            // console.log(res.data)
-            // setBasket(res.data as InterfaceBasket[])
-            void router.push("/");
+            void router.push("/checkout/complete");
             return "Order successfully";
           },
           error: (err) => {
@@ -208,13 +197,6 @@ export default function Checkout() {
           },
         },
       );
-      // console.log({
-      //   response,
-      // });
-
-      // console.log(response.data);
-
-      // setBasket(response.data as InterfaceBasket[]);
     } catch (error) {
       console.error(error);
     }

@@ -5,15 +5,6 @@ import SidebarAdmin from "@/components/common/SideBarAdmin";
 import Modal from "@/components/layout/Modal";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -143,7 +134,13 @@ export default function AdminOrders() {
             ),
           }),
         );
-        setOrders(fetchedOrders);
+
+        // const sortedOrders = fetchedOrders.sortby((order: any) => order.status);
+        const sortedOrders = fetchedOrders.sort((a: any, b: any) =>
+          a.status.localeCompare(b.status),
+        );
+        const reversedOrders = sortedOrders.reverse();
+        setOrders(reversedOrders);
       })
       .catch((error) => console.error("Failed to fetch orders:", error));
   }, []);

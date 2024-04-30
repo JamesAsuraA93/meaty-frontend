@@ -8,7 +8,7 @@ import { ChevronLeft, Plus, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 // import { text } from "stream/consumers";
 interface ProductDetail {
@@ -156,6 +156,23 @@ export default function ProductDetail() {
     }
   };
 
+  const fetchDataComment = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8002/product/comment/${product_id as string}`,
+      );
+      console.log("response", response);
+      const comemnts: CommentInterface[] = response.data;
+      const reverseComments = comemnts.reverse();
+      setListComment(reverseComments);
+      setComment("");
+      // window.scroll({ behavior: "smooth" });
+      // window.scrollTo(0, document.body.scrollHeight);
+    } catch (error) {
+      console.error("Error fetching comment:", error);
+    }
+  }, [product_id]);
+
   const doComment = async (text: string) => {
     //     comment: string;
     // productId: number;
@@ -176,12 +193,15 @@ export default function ProductDetail() {
             console.log({
               res,
             });
+            // router.reload();
+            void fetchDataComment();
             return "Commented";
           },
           error: (err) => {
             console.log({
               err,
             });
+
             return "Failed to comment";
           },
         },
@@ -196,21 +216,23 @@ export default function ProductDetail() {
   const [listComment, setListComment] = useState<CommentInterface[]>([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8002/product/comment/${product_id as string}`)
-      .then((response) => {
-        console.log("response", response);
-        const comemnts: CommentInterface[] = response.data;
-        setListComment(comemnts);
-      })
-      .catch((error) => {
-        console.error("Error fetching comment:", error);
-      });
+    void fetchDataComment();
+
+    // axios
+    //   .get(`http://localhost:8002/product/comment/${product_id as string}`)
+    //   .then((response) => {
+    //     console.log("response", response);
+    //     const comemnts: CommentInterface[] = response.data;
+    //     setListComment(comemnts);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching comment:", error);
+    //   });
 
     // getScore({ text: comment }).then((res) => {
     //   console.log("res", res);
     // });
-  }, [product_id]);
+  }, [product_id, fetchDataComment]);
 
   // useEffect(() => {
 
@@ -363,13 +385,19 @@ export default function ProductDetail() {
               <div className="flex justify-between">
                 <h1 className="text-[#383634]">Anonymous</h1>
                 {dcomment.sentimentScore > 50 ? (
-                  <h1 className="text-green-500 ">Positive</h1>
+                  <h1 className="text-green-500 ">
+                    Positive <br />
+                    {dcomment.sentimentScore}{" "}
+                  </h1>
                 ) : (
-                  <h1 className="text-red-500">Negative</h1>
+                  <h1 className="text-red-500">
+                    Negative <br /> {dcomment.sentimentScore}
+                  </h1>
                 )}
               </div>
               <p>
-                {dcomment.comment} : {dcomment.sentimentScore}
+                {dcomment.comment}
+                {/* : {dcomment.sentimentScore} */}
               </p>
             </div>
           ))}

@@ -35,7 +35,13 @@ interface InputWithLabelProps {
   type?: string;
 }
 
-function InputWithLabel({ id, label, value, onChange, type = "text" }: InputWithLabelProps) {
+function InputWithLabel({
+  id,
+  label,
+  value,
+  onChange,
+  type = "text",
+}: InputWithLabelProps) {
   return (
     <div className="space-y-4">
       <Label htmlFor={id}>{label}</Label>
@@ -75,12 +81,13 @@ export default function EditProduct() {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      axios.get(`http://localhost:8002/product/${id}`)
-        .then(response => {
+      axios
+        .get(`http://localhost:8002/product/${id}`)
+        .then((response) => {
           setProduct(response.data);
         })
-        .catch(error => {
-          console.error('Error fetching product:', error);
+        .catch((error) => {
+          console.error("Error fetching product:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -92,7 +99,14 @@ export default function EditProduct() {
     const { name, value } = e.target;
     setProduct((prev) => ({
       ...prev,
-      [name]: name === 'price' || name === 'cbdMax' || name === 'cbdMin' || name === 'thcMax' || name === 'thcMin' ? parseFloat(value) : value,
+      [name]:
+        name === "price" ||
+        name === "cbdMax" ||
+        name === "cbdMin" ||
+        name === "thcMax" ||
+        name === "thcMin"
+          ? parseFloat(value)
+          : value,
     }));
   };
 
@@ -102,11 +116,15 @@ export default function EditProduct() {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const response = await axios.post("http://localhost:8006/files/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
+        const response = await axios.post(
+          "http://localhost:8006/files/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           },
-        });
+        );
         const filePath = response.data.file.path;
         setProduct((prev) => ({ ...prev, filePath }));
       } catch (error) {
@@ -120,11 +138,11 @@ export default function EditProduct() {
       if (id === "0") {
         await axios.post("http://localhost:8002/product", product);
         alert("New product added!");
-        void router.push("/admin/products")
+        void router.push("/admin/products");
       } else {
         await axios.put(`http://localhost:8002/product/${id}`, product);
         alert("Product updated!");
-        void router.push("/admin/products")
+        void router.push("/admin/products");
       }
     } catch (error) {
       console.error("Error adding/updating product:", error);
@@ -138,15 +156,20 @@ export default function EditProduct() {
       <SidebarAdmin />
       <div className="flex flex-1 flex-col p-4 md:flex-row">
         <div className="flex-1 space-y-4 p-4">
-          <div className="relative text-center">
+          <div className="relative h-[20rem] text-center">
             <label htmlFor="upload-image" className="cursor-pointer">
               <img
                 src={imageUrl || "/placeholder.png"}
-                alt="Product"
-                className="mb-4 rounded-lg object-cover shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
+                // alt="Product"
+                alt="Product Image"
+                className="mb-4 rounded-lg object-cover shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg "
                 style={{ width: "100%", height: "100%" }}
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-5 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:bg-opacity-50">
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-5 text-lg font-semibold text-white transition-all duration-300 ease-in-out
+              hover:bg-opacity-50
+              "
+              >
                 <Upload size={32} />
               </div>
             </label>
@@ -155,6 +178,7 @@ export default function EditProduct() {
               id="upload-image"
               style={{ display: "none" }}
               onChange={handleImageUpload}
+              className="h-[20rem] "
             />
           </div>
         </div>
